@@ -1,0 +1,169 @@
+hour,channel,sessions,purchases
+0,Organic Search,9541,229
+1,Organic Search,4771,100
+2,Organic Search,3180,57
+3,Organic Search,1590,29
+4,Organic Search,1590,29
+5,Organic Search,3180,67
+6,Organic Search,7951,202
+7,Organic Search,14312,407
+8,Organic Search,19083,571
+9,Organic Search,22263,666
+10,Organic Search,25443,761
+11,Organic Search,28624,900
+12,Organic Search,48979,1612
+13,Organic Search,30214,949
+14,Organic Search,27034,809
+15,Organic Search,25443,761
+16,Organic Search,27034,809
+17,Organic Search,30214,949
+18,Organic Search,33395,1099
+19,Organic Search,38165,1314
+20,Organic Search,57884,2079
+21,Organic Search,47707,1713
+22,Organic Search,41346,1423
+23,Organic Search,25444,761
+0,Paid Search,5725,162
+1,Paid Search,2862,71
+2,Paid Search,1908,41
+3,Paid Search,954,20
+4,Paid Search,954,20
+5,Paid Search,1908,47
+6,Paid Search,4771,144
+7,Paid Search,8587,289
+8,Paid Search,11450,405
+9,Paid Search,13358,473
+10,Paid Search,15266,540
+11,Paid Search,17175,638
+12,Paid Search,27288,1063
+13,Paid Search,18129,674
+14,Paid Search,16220,574
+15,Paid Search,15266,540
+16,Paid Search,16220,574
+17,Paid Search,18129,674
+18,Paid Search,20037,780
+19,Paid Search,22899,932
+20,Paid Search,33395,1419
+21,Paid Search,28624,1216
+22,Paid Search,24808,1010
+23,Paid Search,15266,541
+0,Organic Social,3499,32
+1,Organic Social,1749,14
+2,Organic Social,1166,8
+3,Organic Social,583,4
+4,Organic Social,583,4
+5,Organic Social,1166,9
+6,Organic Social,2915,28
+7,Organic Social,5248,56
+8,Organic Social,6997,79
+9,Organic Social,8163,92
+10,Organic Social,9330,105
+11,Organic Social,10496,125
+12,Organic Social,12828,159
+13,Organic Social,11079,131
+14,Organic Social,9913,112
+15,Organic Social,9330,105
+16,Organic Social,9913,112
+17,Organic Social,11079,131
+18,Organic Social,12245,152
+19,Organic Social,13994,182
+20,Organic Social,16327,221
+21,Organic Social,24490,332
+22,Organic Social,22741,295
+23,Organic Social,12128,137
+0,Paid Social,5840,39
+1,Paid Social,2920,17
+2,Paid Social,1947,10
+3,Paid Social,973,5
+4,Paid Social,973,5
+5,Paid Social,1947,11
+6,Paid Social,4866,34
+7,Paid Social,8760,69
+8,Paid Social,11679,97
+9,Paid Social,13626,113
+10,Paid Social,15573,130
+11,Paid Social,17519,153
+12,Paid Social,17130,157
+13,Paid Social,18493,162
+14,Paid Social,16546,138
+15,Paid Social,15573,130
+16,Paid Social,16546,138
+17,Paid Social,18493,162
+18,Paid Social,20439,187
+19,Paid Social,23359,224
+20,Paid Social,27252,272
+21,Paid Social,43798,437
+22,Paid Social,43020,412
+23,Paid Social,24916,207
+0,Referral,2211,36
+1,Referral,1105,16
+2,Referral,737,9
+3,Referral,368,4
+4,Referral,368,4
+5,Referral,737,11
+6,Referral,1842,32
+7,Referral,3316,65
+8,Referral,4422,91
+9,Referral,5159,106
+10,Referral,5896,121
+11,Referral,6633,143
+12,Referral,8107,183
+13,Referral,7001,151
+14,Referral,6264,129
+15,Referral,5896,121
+16,Referral,6264,129
+17,Referral,7001,151
+18,Referral,7738,175
+19,Referral,8844,209
+20,Referral,10318,254
+21,Referral,11055,272
+22,Referral,9581,226
+23,Referral,5896,121
+0,Direct,4169,94
+1,Direct,2085,41
+2,Direct,1390,24
+3,Direct,695,12
+4,Direct,695,12
+5,Direct,1390,27
+6,Direct,3474,83
+7,Direct,6254,167
+8,Direct,8338,235
+9,Direct,9728,274
+10,Direct,11118,313
+11,Direct,12507,370
+12,Direct,15287,474
+13,Direct,13202,391
+14,Direct,11812,333
+15,Direct,11118,313
+16,Direct,11812,333
+17,Direct,13202,391
+18,Direct,14592,452
+19,Direct,16676,540
+20,Direct,19456,658
+21,Direct,20845,705
+22,Direct,18066,585
+23,Direct,11118,313
+0,Email,1674,70
+1,Email,837,31
+2,Email,558,18
+3,Email,279,9
+4,Email,279,9
+5,Email,558,20
+6,Email,1395,62
+7,Email,5526,276
+8,Email,6698,353
+9,Email,3907,206
+10,Email,4465,235
+11,Email,5023,278
+12,Email,7981,462
+13,Email,5302,293
+14,Email,4744,250
+15,Email,4465,235
+16,Email,4744,250
+17,Email,5302,293
+18,Email,5860,339
+19,Email,6698,405
+20,Email,7814,494
+21,Email,10046,635
+22,Email,7256,439
+23,Email,4465,235
