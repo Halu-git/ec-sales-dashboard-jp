@@ -1,0 +1,156 @@
+// ============================================================
+// 売上・ECダッシュボード ― DAXメジャー集（31本）
+// 前提: powerbi/BUILD_NOTES.md のテーブル構成。
+// 売上系は FactOrders、流入・ファネル系は FactTraffic から取る
+// （混ぜない。理由は BUILD_NOTES.md の設計ルール参照）。
+// 金額は円。率（CVR・構成比など）は小数（表示側で % 書式）。
+// データはデモ（合成）データ。実務では2ファクトを GA4 集計と
+// 基幹注文データに差し替えるだけで全メジャーがそのまま動く。
+// ============================================================
+
+// ---------- 基本集計（売上系：FactOrders） ----------
+売上 =
+SUM ( FactOrders[revenue_yen] )
+
+注文件数 =
+SUM ( FactOrders[orders] )
+
+販売数量 =
+SUM ( FactOrders[units] )
+
+客単価 =
+DIVIDE ( [売上], [注文件数] )
+
+// ---------- 基本集計（流入系：FactTraffic） ----------
+セッション =
+SUM ( FactTraffic[sessions] )
+
+カート追加 =
+SUM ( FactTraffic[add_to_cart] )
+
+チェックアウト開始 =
+SUM ( FactTraffic[begin_checkout] )
+
+// 購入数はファネル専用。注文件数と同値（構造的一致）だが、
+// KPIカードは [注文件数] に統一すること（BUILD_NOTES 落とし穴4）。
+購入数 =
+SUM ( FactTraffic[purchases] )
+
+// ---------- ファネル率（すべて FactTraffic 内で閉じる） ----------
+カート率 =
+DIVIDE ( [カート追加], [セッション] )
+
+チェックアウト遷移率 =
+DIVIDE ( [チェックアウト開始], [カート追加] )
+
+購入率 =
+DIVIDE ( [購入数], [チェックアウト開始] )
+
+CVR =
+DIVIDE ( [購入数], [セッション] )
+
+// ---------- 粗利（FactSkuSales：期間合計テーブル） ----------
+// daily_orders には SKU・原価がないため、粗利は期間合計の
+// FactSkuSales から取る。日付・チャネルフィルタは効かない
+// （カテゴリフィルタのみ DimCategory 経由で効く）。
+粗利 =
+SUM ( FactSkuSales[gross_profit_yen] )
+
+// 分母も FactSkuSales 側の売上にする（[売上] と混ぜない）。
+粗利率 =
+DIVIDE ( [粗利], SUM ( FactSkuSales[revenue_yen] ) )
+
+// ---------- 前月比・前月差 ----------
+// DimDate は日次カレンダー（2025-04-01〜2026-10-31）。
+売上 前月 =
+CALCULATE ( [売上], DATEADD ( DimDate[date], -1, MONTH ) )
+
+売上 前月比 =
+DIVIDE ( [売上], [売上 前月] ) - 1
+
+注文件数 前月比 =
+DIVIDE (
+    [注文件数],
+    CALCULATE ( [注文件数], DATEADD ( DimDate[date], -1, MONTH ) )
+) - 1
+
+セッション 前月比 =
+DIVIDE (
+    [セッション],
+    CALCULATE ( [セッション], DATEADD ( DimDate[date], -1, MONTH ) )
+) - 1
+
+// 率の前月差は「比」ではなくポイント差で返す。
+CVR 前月差 =
+[CVR] - CALCULATE ( [CVR], DATEADD ( DimDate[date], -1, MONTH ) )
+
+// ---------- 前年同月比 ----------
+// データ開始が2025年4月のため、2026年3月以前は空白（正常）。
+売上 前年同月 =
+CALCULATE ( [売上], DATEADD ( DimDate[date], -1, YEAR ) )
+
+売上 前年同月比 =
+DIVIDE ( [売上], [売上 前年同月] ) - 1
+
+// ---------- 構成比 ----------
+// チャネル／カテゴリの文脈で使う。日付フィルタは維持し、
+// チャネルとカテゴリのフィルタだけを外して全体比を取る。
+売上 構成比 =
+DIVIDE (
+    [売上],
+    CALCULATE ( [売上], ALL ( DimChannel ), ALL ( DimCategory ) )
+)
+
+// ---------- 顧客（FactCustomers：月粒度） ----------
+// year_month で DimDate に接続。月スライサー前提（落とし穴3）。
+新規顧客数 =
+SUM ( FactCustomers[new_customers] )
+
+リピート顧客数 =
+SUM ( FactCustomers[repeat_customers] )
+
+新規売上 =
+SUM ( FactCustomers[new_revenue_yen] )
+
+リピート売上 =
+SUM ( FactCustomers[repeat_revenue_yen] )
+
+リピート売上比率 =
+DIVIDE ( [リピート売上], [新規売上] + [リピート売上] )
+
+// ---------- 時間帯（FactHourly：期間合計） ----------
+// DimDate に接続していないため、期間スライサーは効かない。
+時間帯 セッション =
+SUM ( FactHourly[sessions] )
+
+時間帯 購入 =
+SUM ( FactHourly[purchases] )
+
+時間帯 CVR =
+DIVIDE ( [時間帯 購入], [時間帯 セッション] )
+
+// ---------- 平均 ----------
+// 表示期間内の月平均（KPIカード用。Excel版の月平均売上と一致）。
+月平均売上 =
+AVERAGEX ( VALUES ( DimDate[year_month] ), [売上] )
+
+// ============================================================
+// 実データへの差し替え手順（実務案件向け）
+// 1. GA4 側： BigQuery エクスポートまたは集計エクスポートを
+//    日次×チャネルに集計し、daily_traffic.csv と同じ列構成で
+//    FactTraffic に読む。チャネルは GA4 のデフォルトチャネル
+//    グループに寄せ、DimChannel の sort_order を維持する。
+// 2. 注文側： EC 基幹（Shopify／futureshop 等）の注文集計を
+//    日次×チャネル×カテゴリに集計し、daily_orders.csv と同じ
+//    列構成で FactOrders に読む。チャネルの帰属ルール（注文に
+//    紐づく流入元）は GA4 側と定義を揃えること。
+// 3. 正の決め方： GA4 の purchases と基幹の orders は実データ
+//    では一致しない。本サンプルの「注文件数＝購入数」は合成の
+//    前提なので、実務では KPI カード＝基幹の注文件数、ファネル
+//    ＝GA4 の購入、と出所を固定し、両者の差異は別途モニタリング
+//    する（CVR は GA4 内で閉じる原則はそのまま）。
+// 4. SKU・粗利： 注文明細（SKU 粒度）が取れる場合は FactSkuSales
+//    を日次×SKU のファクトに置き換えると、粗利にも日付・チャネル
+//    フィルタが効くようになる。その場合は本ファイルの粗利ブロック
+//    の参照先だけを差し替える。
+// ============================================================
